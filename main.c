@@ -2,12 +2,55 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <math.h>
+#include <time.h>
+
+
+#define TIMER_ID 0
+#define TIME 50
+
+
+
+// struct that represents object in game
+typedef struct object{
+
+    // array which determines whether in given lane (0/1/2) is object drawn
+    unsigned obj[3];
+
+    // position of that obj (where is on track)
+    float objPos;
+} Object;
 
 
 /*callback function declarations*/
 static void onDisplay(void);
 static void onReshape(int width, int height);
 static void onKeyboard(unsigned char key, int x, int y);
+
+
+float animationSpeedParameter=1;
+int animationActive=0;
+int animationActiveRight=0;
+int animationActiveLeft=0;
+
+
+// playerLane:
+// 0 - first lane (left)
+// 3 - second lane (middle)
+// 6 - third lane (right)
+int playerLaneGoingTo=3;
+float playerLane=3;
+
+
+// functions declarations
+void goRight();
+void goLeft();
+void initObjects();
+void onTimer(int value);
+Object newObject();
+
+
+
+Object allObjects[100];
 
 
 
@@ -32,6 +75,13 @@ int main(int argc, char **argv){
     glClearColor(1, 1, 1, 1);
     glEnable(GL_DEPTH_TEST);
 
+    // initialize rand for all calls
+    srand(time(NULL));
+
+    // initialize objects array
+    initObjects();
+
+
     // starting main loop
     glutMainLoop();
 
@@ -49,7 +99,7 @@ static void onDisplay(void){
     glLoadIdentity();
     // positions and aims the camera towards where we want (viewing transformation)
     gluLookAt(3, 6, 8, 3, 1, -2, 0, 1, 0);
-    
+    // gluLookAt(xCam+rCam*sin(phiCam), yCam, zCam+rCam*cos(phiCam)-10, 3, 1, -2, 0, 1, 0);
 
 
     // position of light source ((x, y, z, w) position of light)
@@ -93,14 +143,12 @@ static void onDisplay(void){
     // create objects
     glPushMatrix();
     glColor3f(0, 1, 0);
-    glTranslatef(3, 0, 0);
+    glTranslatef(playerLane, 0, 0);
     glutSolidSphere(0.4, 100, 100);
     glPopMatrix();
 
 
     
-
-    glColor3f(0, 1, 0);
 
     // create path/borders
     glLineWidth(100);
@@ -113,6 +161,34 @@ static void onDisplay(void){
     glVertex3f(7, 0, 100);
     glVertex3f(7, 0, -100);
     glEnd();
+
+
+    // create objects
+    for (int i = 0; i < 100; i++){
+        if (allObjects[i].objPos < 100){
+
+            for (int j = 0; j < 3; j++){
+
+                if (allObjects[i].obj[j] == 1){
+
+                    // drawing/putting object in his lane  
+                    int objectLane = 3 * j;
+
+                    // Drawing obstacles
+                    glPushMatrix();
+
+                    glTranslatef(objectLane, 0, allObjects[i].objPos);
+                    glutSolidCube(0.5);
+
+                    glPopMatrix();
+
+
+                }
+             }
+        }
+    }
+    
+
 
 
     glShadeModel(GL_SMOOTH);
@@ -136,11 +212,150 @@ static void onReshape(int width, int height){
 }
 
 
+// move player right
+void goRight(int value){
+
+    if (value != TIMER_ID){
+        return;
+    }
+
+    // speed of player changing lanes
+    playerLane = playerLane + 1;
+
+    if (playerLane == playerLaneGoingTo){
+        animationActiveRight = 0;
+    }
+
+    if (animationActiveRight){
+        glutTimerFunc(TIME, goRight, TIMER_ID);
+    }
+
+    glutPostRedisplay();
+}
+
+// move player left
+void goLeft(int value){
+
+    if (value != TIMER_ID){
+        return;
+    }
+
+    // speed of player changing lanes
+    playerLane = playerLane - 1;
+
+    if (playerLane == playerLaneGoingTo){
+        animationActiveLeft = 0;
+    }
+
+
+    if (animationActiveLeft){
+        glutTimerFunc(TIME, goLeft, TIMER_ID);
+    }
+
+    glutPostRedisplay();
+}
+
+
+void onTimer(int value){
+    if (value != TIMER_ID){
+        return;
+    }
+
+
+    // moving objects as time goes by
+    for (int i = 0; i < 100; i++){
+        if (allObjects[i].objPos < 3){
+
+            allObjects[i].objPos =allObjects[i].objPos+animationSpeedParameter * .5;
+        } else{
+            // return objects behind all others so they all loop
+            allObjects[i].objPos = -2000.0;
+        }
+    }
+
+    glutPostRedisplay();
+
+    // calling onTimer again if the animation/game is still active
+    if (animationActive){
+        glutTimerFunc(TIME, onTimer, TIMER_ID);
+    }
+}
+
+
+// create new object
+Object newObject(){
+
+    Object object;
+
+    int i;
+
+    for (i = 0; i < 3; i++){
+        // randomize in which lanes object exists
+        int randomLane = rand() % 2;
+        object.obj[i] = randomLane;
+    }
+    // just initializing objPos, later in initObjects it will be set correctly
+    object.objPos = 0;
+
+    return object;
+}
+
+
+// init array of objects
+void initObjects(){
+    
+    
+    
+    for (int i = 0; i < 100; i++){
+        allObjects[i] = newObject();
+        
+        
+        // set correct values of objPos for each object (i parameter is used for setting distance between every row of objects)
+        allObjects[i].objPos = - 80 - 20*i;
+
+        
+    }  
+}
+
+
+
 static void onKeyboard(unsigned char key, int x, int y){
     switch (key) {
         // end program (ESC)
         case 27:
             exit(0);
             break;
+        // move player left if game is running/animation is active
+        case 'q':
+            if (animationActive == 1){
+
+                animationActiveRight = 0;
+                if (animationActiveLeft == 0 && playerLaneGoingTo > 0){
+                    playerLaneGoingTo -= 3;
+                    animationActiveLeft = 1;
+                    glutTimerFunc(TIME, goLeft, TIMER_ID);
+                }
+            }
+            break;
+        // move player right if game is running/animation is active
+        case 'e':
+            if (animationActive == 1){
+
+                animationActiveLeft = 0;
+                if (animationActiveRight == 0 && playerLaneGoingTo < 6){
+
+                    playerLaneGoingTo += 3;
+                    animationActiveRight = 1;
+                    glutTimerFunc(TIME, goRight, TIMER_ID);
+                }
+            }
+            break;
+        // start the game
+        case 'u':
+            if(!animationActive){
+                animationActive=1;
+                glutTimerFunc(TIME, onTimer, TIMER_ID);
+                break;
+            }
     }
 }
