@@ -2,9 +2,10 @@ PROGRAM   = infinityRace
 CC        = gcc
 CFLAGS    = -g -Wall -Wextra
 LDFLAGS   = -lGL -lGLU -lglut -lm
+OBJ		  = main.o initialize.o functions.o playerAndObjects.o colors.o
 
-$(PROGRAM): main.o
-	$(CC) -o $(PROGRAM) main.o $(LDFLAGS)
+$(PROGRAM): $(OBJ)
+	$(CC) -o $(PROGRAM) $^ $(LDFLAGS)
 
 .PHONY: clean dist
 
