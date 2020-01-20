@@ -1,12 +1,11 @@
 #include "initialize.h"
-// #include "playerAndObjects.h"
 
 
 float animationSpeedParameter=1;
 int animationActive=0;
 int animationActiveRight=0;
 int animationActiveLeft=0;
-
+bool endGame=false;
 
 
 void glutInitNew(int *argc, char **argv){
@@ -32,6 +31,7 @@ void funcInit(){
     glutReshapeFunc(onReshape);
     glutKeyboardFunc(onKeyboard);
 
+    
     // initialize rand for all calls
     srand(time(NULL));
 

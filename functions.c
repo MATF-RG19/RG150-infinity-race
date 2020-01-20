@@ -3,6 +3,17 @@
 
 
 
+// skloniti
+float xCam=3;
+float yCam=6;
+float zCam=8;
+float rCam=10;
+float phiCam=0;
+float thetaCam=0;
+// float phiCam=1.5;
+// float thetaCam=-2.5;
+float p=45;
+
 void onDisplay(void){
 
     // clears the window
@@ -13,10 +24,13 @@ void onDisplay(void){
     // clear the matrix
     glLoadIdentity();
     // positions and aims the camera towards where we want (viewing transformation)
-    gluLookAt(3, 6, 8, 3, 1, -2, 0, 1, 0);
+    // gluLookAt(3, 6, 8, 3, 1, -2, 0, 1, 0);
     // gluLookAt(xCam+rCam*sin(phiCam), yCam, zCam+rCam*cos(phiCam)-10, 3, 1, -2, 0, 1, 0);
-    
-    
+    // gluLookAt(xCam+rCam*sin(phiCam)+rCam*sin(thetaCam), yCam+rCam*cos(thetaCam), zCam+rCam*cos(phiCam)-10, 3, 1, -2, 0, 1, 0);
+    gluLookAt(xCam+rCam*sin(phiCam)+rCam*sin(thetaCam), yCam+rCam*cos(thetaCam)-10, zCam+rCam*cos(phiCam)-10, 3, 1, -2, 0, 1, 0);
+    // printf("%f,%f\n",phiCam,thetaCam);
+
+    printf("BOOL %d animation %d\n",endGame,animationActive);
 
     // position of light source ((x, y, z, w) position of light)
     GLfloat lightPosition[] = { 1, 1, 1, 0 };
@@ -28,7 +42,7 @@ void onDisplay(void){
     GLfloat lightDiffuse[] = { 0, 0, 0, 1 };
 
     // specular RGBA intensity of light
-    GLfloat lightSpecular[] = { 1, 1, 1, 1 };
+    // GLfloat lightSpecular[] = { 1, 1, 1, 1 };
 
     // ambient color of material
     GLfloat ambientMaterial[] = { 0, 0, 1, 1 };
@@ -37,7 +51,7 @@ void onDisplay(void){
     GLfloat diffuseMaterial[] = { 0, 1, 0, 1 };
 
     // specular color of material
-    GLfloat specularMaterial[] = { 1, 1, 1, 1 };
+    // GLfloat specularMaterial[] = { 1, 1, 1, 1 };
 
     // specular exponent
     GLfloat shininess = 10;
@@ -48,12 +62,12 @@ void onDisplay(void){
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
+    // glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
 
-    // set material parameters
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMaterial);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMaterial);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specularMaterial);
+    // // set material parameters
+    // glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMaterial);
+    // glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMaterial);
+    // glMaterialfv(GL_FRONT, GL_SPECULAR, specularMaterial);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
     // create objects
@@ -67,45 +81,25 @@ void onDisplay(void){
     glPopMatrix();
 
 
-    
+    // if(scaleParameterBody>1.2 || scaleParameterEars>1.5 || scaleParameterEyes>1.5){
+        
+    //     glutTimerFunc(TIME,endGameAnimation,TIMER_ID);
+    // }
 
     // create path/borders
     glLineWidth(100);
     glBegin(GL_LINES);
-    glVertex3f(-1, 0, 100);
-    glVertex3f(-1, 0, -100);
+    glVertex3f(-1, -0.5, 100);
+    glVertex3f(-1, -0.5, -100);
     glEnd();
 
     glBegin(GL_LINES);
-    glVertex3f(7, 0, 100);
-    glVertex3f(7, 0, -100);
+    glVertex3f(7, -0.5, 100);
+    glVertex3f(7, -0.5, -100);
     glEnd();
 
-
-    // create objects
-    for (int i = 0; i < 100; i++){
-        if (allObjects[i].objPos < 100){
-
-            for (int j = 0; j < 3; j++){
-
-                if (allObjects[i].obj[j] == 1){
-
-                    // drawing/putting object in his lane  
-                    int objectLane = 3 * j;
-
-                    // Drawing obstacles
-                    glPushMatrix();
-
-                    glTranslatef(objectLane, 0, allObjects[i].objPos);
-                    glutSolidCube(0.5);
-
-                    glPopMatrix();
-
-
-                }
-             }
-        }
-    }
+    
+    drawObjects();
     
 
 
@@ -136,7 +130,10 @@ void onTimer(int value){
     if (value != TIMER_ID){
         return;
     }
-
+    glPushMatrix();
+    glTranslatef(1,4,-10);
+    glutSolidCube(5);
+    glPopMatrix();
     wheelAngle=wheelAngle+1;
 
     // moving objects as time goes by
@@ -156,6 +153,54 @@ void onTimer(int value){
     if (animationActive){
         glutTimerFunc(TIME, onTimer, TIMER_ID);
     }
+}
+
+void endGameAnimation(int value){
+    if (value != TIMER_ID){
+        return;
+    }
+
+    
+    phiCam=-3;
+    thetaCam=0;
+    endGame=true;
+
+    animationActive=0;
+    
+    glutPostRedisplay();
+    // if (animationActive){
+    //     glutTimerFunc(TIME, onTimer, TIMER_ID);
+    // }
+
+    
+}
+
+void resetEverything(){
+    // animationActive=0;
+
+    phiCam=0;
+    thetaCam=0;
+    
+    playerLaneGoingTo=3;
+    playerLane=3;
+    
+
+    scaleParameterBody=1;
+    scaleParameterBodyEnd=1;
+    scaleParameterEars=1;
+    scaleParameterEyes=1;
+    scaleParameterEyesPupils=1;
+
+    wheelAngle=0;
+
+
+    // phiCam=0;
+    // thetaCam=0;
+    // glutPostRedisplay();
+    endGame=false;
+
+    initObjects();
+    // glutPostRedisplay();
 }
 
 
@@ -192,11 +237,46 @@ void onKeyboard(unsigned char key, int x, int y){
             break;
         // start the game
         case 'u':
-            if(!animationActive){
+            if(!animationActive && !endGame){
                 animationActive=1;
                 glutTimerFunc(TIME, onTimer, TIMER_ID);
+            // pause the game
+            }else if(animationActive && !endGame){
+                animationActive=0;
+            }
+                // glutTimerFunc(TIME, onTimer, TIMER_ID);
+                glutPostRedisplay();
+            
+            break;
+        // restart the game
+        case 'r':
+            if(!animationActive){
+                resetEverything();
+                // endGame=false;
+                // animationActive=0;
+                // endGame=false;
+                
+                glutPostRedisplay();
+                
+                // glutTimerFunc(TIME, onTimer, TIMER_ID);
             }
             break;
 
+        case 'a':
+            phiCam=phiCam+0.5;
+            glutPostRedisplay();
+            break;
+        case 'd':
+            phiCam=phiCam-0.5;
+            glutPostRedisplay();
+            break;
+        case 'w':
+            thetaCam=thetaCam+0.5;
+            glutPostRedisplay();
+            break;
+        case 's':
+            thetaCam=thetaCam-0.5;
+            glutPostRedisplay();
+            break;
     }
 }
