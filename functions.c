@@ -295,6 +295,7 @@ void onKeyboard(unsigned char key, int x, int y){
             break;
         // move player left if game is running/animation is active
         case 'q':
+        case 'Q':
             if (animationActive == 1){
 
                 animationActiveRight = 0;
@@ -307,6 +308,7 @@ void onKeyboard(unsigned char key, int x, int y){
             break;
         // move player right if game is running/animation is active
         case 'e':
+        case 'E':
             if (animationActive == 1){
 
                 animationActiveLeft = 0;
@@ -320,6 +322,7 @@ void onKeyboard(unsigned char key, int x, int y){
             break;
         // start the game
         case 'u':
+        case 'U':
             if(!animationActive && !endGame){
                 animationActive=1;
                 strcpy(text,"");
@@ -337,6 +340,7 @@ void onKeyboard(unsigned char key, int x, int y){
             break;
         // restart the game
         case 'r':
+        case 'R':
             if(!animationActive){
                 resetEverything();
                 // endGame=false;
@@ -350,28 +354,12 @@ void onKeyboard(unsigned char key, int x, int y){
             break;
         // change camera view
         case 'c':
+        case 'C':
             if(phiCam==0 && thetaCam==0){
                 phiCam=-0.5;
             }else{
                 phiCam=0;
             }
-            glutPostRedisplay();
-            break;
-
-        case 'a':
-            phiCam=phiCam+0.5;
-            glutPostRedisplay();
-            break;
-        case 'd':
-            phiCam=phiCam-0.5;
-            glutPostRedisplay();
-            break;
-        case 'w':
-            thetaCam=thetaCam+0.5;
-            glutPostRedisplay();
-            break;
-        case 's':
-            thetaCam=thetaCam-0.5;
             glutPostRedisplay();
             break;
     }
