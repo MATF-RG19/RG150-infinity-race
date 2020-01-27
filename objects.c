@@ -1,4 +1,4 @@
-#include "objects.h"
+#include "incl/objects.h"
 
 
 Object allObjects[numberOfObjects];
@@ -52,7 +52,7 @@ void drawObjects(){
     // glMaterialfv(GL_FRONT, GL_SPECULAR, materialBlack1);
     // create objects
     int objectLane;
-    for (int i = 0; i < 100; i++){
+    for (int i = 0; i < numberOfObjects; i++){
         
         if (allObjects[i].objPos >-70){
 

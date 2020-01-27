@@ -5,8 +5,7 @@
 
 
 // alias of texture we use
-#define TEXTURE "Leather0085_1_S.bmp"
-
+#define TEXTURE "assets/Leather0085_1_S.bmp"
 
 GLuint names[1];
 

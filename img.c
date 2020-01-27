@@ -1,4 +1,4 @@
-#include "img.h"
+#include "incl/img.h"
 
 Image *imageInit(int width, int height) {
 

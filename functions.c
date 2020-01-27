@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "incl/functions.h"
 
 
 
@@ -200,7 +200,7 @@ void resetEverything(){
     colorChangeSpeedUpdate=0.1;
 
     score=0;
-    strcpy(text,"Press U to start game or ESC to quit");
+    strcpy(text,"Press U to start / pause game or ESC to quit");
     strcpy(textCam,"Press C to change camera");
 
     endGame=false;
