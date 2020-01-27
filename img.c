@@ -77,7 +77,7 @@ void imageRead(Image *image, char *filename) {
    */
   image->width = bih.width;
   image->height = bih.height;
-  printf("%d %d\n",image->width,image->height);
+  // printf("%d %d\n",image->width,image->height);
   /*
    * U zavisnosti od toga koliko bitova informacija se cita po pikselu 
    * (da li samo R, G i B komponenta ili R, G, B i A), alociramo niz 
