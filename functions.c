@@ -3,17 +3,15 @@
 
 
 
-// skloniti
+
 float xCam=3;
 float yCam=6;
 float zCam=8;
 float rCam=10;
 float phiCam=0;
 float thetaCam=0;
-// float phiCam=1.5;
-// float thetaCam=-2.5;
-float p=45;
-// -0.5 0
+
+
 void onDisplay(void){
 
     // clears the window
