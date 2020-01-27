@@ -12,6 +12,12 @@ float scaleParameterEyesPupils=1;
 
 float wheelAngle=0;
 
+
+
+float pomeriY=0;
+
+
+
 // move player right
 void goRight(int value){
 
@@ -43,6 +49,7 @@ void goLeft(int value){
     // speed of player changing lanes
     playerLane = playerLane - 1;
 
+
     if (playerLane == playerLaneGoingTo){
         animationActiveLeft = 0;
     }
@@ -59,12 +66,11 @@ void goLeft(int value){
 
 
 
-
 void drawBarrelPig(){
     
 
     glPushMatrix();
-        
+        // glRotatef(30,0,0,1);
         
         
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialPink1);
@@ -72,119 +78,133 @@ void drawBarrelPig(){
         
         glTranslatef(0,0.8,-2);
         
-        // body and head
         glPushMatrix();
-            GLUquadric* pigBody=gluNewQuadric();
-            glScalef(1,1,1.5);
-            // body
+            glTranslatef(0,sin(pomeriY)/10,0);
+
+            // body and head
             glPushMatrix();
-                glScalef(scaleParameterBody,scaleParameterBody,scaleParameterBodyEnd);
-                glTranslatef(0,0,-0.5);
-                gluCylinder(pigBody,0.5,0.5,1,100,100);
-                glColor3f(1,0,0);
-                gluDisk(pigBody,0,0.5,100,100);
-                glTranslatef(0,0,1);
-                gluDisk(pigBody,0,0.5,100,100);
-            glPopMatrix();
-            // nose/head
-            
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialPink2);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialPink2);
-            
-            
-            glPushMatrix();
+                GLUquadric* pigBody=gluNewQuadric();
+                glScalef(1,1,1.5);
+
+                // body
+                glPushMatrix();
+                    glScalef(scaleParameterBody,scaleParameterBody,scaleParameterBodyEnd);
+                    glTranslatef(0,0,-0.5);
+                    gluCylinder(pigBody,0.5,0.5,1,100,100);
+                    glColor3f(1,0,0);
+                    gluDisk(pigBody,0,0.5,100,100);
+                    glTranslatef(0,0,1);
+                    gluDisk(pigBody,0,0.5,100,100);
+                glPopMatrix();
+
+                // nose/head
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialPink2);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialPink2);
-                glScalef(1.8,1,1);
-                glTranslatef(0,0,-0.5);
-                glutSolidCube(0.2);
-            glPopMatrix();
-            // nostrils
-            glPushMatrix();
                 
-                glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBlack1);
-                glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBlack1);
-                glTranslatef(0.1,0,-0.55);
-                glutSolidCube(0.1);
-            glPopMatrix();
-            glPushMatrix();
-                glTranslatef(-0.1,0,-0.55);
-                glutSolidCube(0.1);
-            glPopMatrix();
-            // eyes
-            glPushMatrix();
                 
+                glPushMatrix();
+                    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialPink2);
+                    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialPink2);
+                    glScalef(1.8,1,1);
+                    glTranslatef(0,0,-0.5);
+                    glutSolidCube(0.2);
+                glPopMatrix();
+
+                // nostrils
                 glPushMatrix();
                     
-                    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialWhite);
-                    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialWhite);
-                    glTranslatef(-0.2,0.2,-0.5);
-                    // make eyes larger
-                    glScalef(1,scaleParameterEyes,1);
-                    glutSolidCube(0.1);
-                glPopMatrix();
-                glPushMatrix();
-                    glTranslatef(0.2,0.2,-0.5);
-                    glScalef(scaleParameterEyes,1,1);
-                    glutSolidCube(0.1);
-                glPopMatrix();
-                // pupils
-                glPushMatrix();
                     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBlack1);
                     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBlack1);
-                    glTranslatef(-0.2,0.2,-0.55);
-                    glScalef(scaleParameterEyesPupils,scaleParameterEyesPupils,1);
-                    glutSolidCube(0.05);
-                glPopMatrix();
-                glPushMatrix();
-                    // glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBlack1);
-                    // glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBlack1);
-                    glTranslatef(0.2,0.2,-0.55);
-                    glScalef(scaleParameterEyesPupils,scaleParameterEyesPupils,1);
-                    glutSolidCube(0.05);
-                glPopMatrix();
-            glPopMatrix();
-            // tail
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialPink2);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialPink2);
-            glColor3f(0,0,0);
-            glPushMatrix();
-                glTranslatef(0,0.2,0.5);
-                glutSolidCube(0.1);
-            glPopMatrix();
-            // ears
-            glColor3f(0,1,0);
-            glPushMatrix();
-                
-                glPushMatrix();
-                    glTranslatef(-0.3,0.5,-0.35);
-                    glScalef(scaleParameterEars,scaleParameterEars,1);
-                    glScalef(2,2,1);
+                    glTranslatef(0.1,0,-0.55);
                     glutSolidCube(0.1);
                 glPopMatrix();
                 glPushMatrix();
-                    glTranslatef(0.3,0.5,-0.35);
-                    glScalef(scaleParameterEars,scaleParameterEars,1);
-                    glScalef(2,2,1);
+                    glTranslatef(-0.1,0,-0.55);
                     glutSolidCube(0.1);
                 glPopMatrix();
+
+                // eyes
                 glPushMatrix();
-                    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBlack1);
-                    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBlack1);
-                    glTranslatef(-0.3,0.5,-0.4);
-                    glScalef(scaleParameterEars,scaleParameterEars,1);
-                    glutSolidCube(0.05);
+                    
+                    glPushMatrix();
+                        
+                        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialWhite);
+                        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialWhite);
+                        glTranslatef(-0.2,0.2,-0.5);
+                        // make eyes larger
+                        glScalef(1,scaleParameterEyes,1);
+                        glutSolidCube(0.1);
+                    glPopMatrix();
+                    glPushMatrix();
+                        glTranslatef(0.2,0.2,-0.5);
+                        glScalef(scaleParameterEyes,1,1);
+                        glutSolidCube(0.1);
+                    glPopMatrix();
+
+                    // pupils
+                    glPushMatrix();
+                        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBlack1);
+                        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBlack1);
+                        glTranslatef(-0.2,0.2,-0.55);
+                        glScalef(scaleParameterEyesPupils,scaleParameterEyesPupils,1);
+                        glutSolidCube(0.05);
+                    glPopMatrix();
+                    glPushMatrix();
+                        // glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBlack1);
+                        // glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBlack1);
+                        glTranslatef(0.2,0.2,-0.55);
+                        glScalef(scaleParameterEyesPupils,scaleParameterEyesPupils,1);
+                        glutSolidCube(0.05);
+                    glPopMatrix();
                 glPopMatrix();
+
+                // tail
+                glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialPink2);
+                glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialPink2);
+                glColor3f(0,0,0);
                 glPushMatrix();
-                    glTranslatef(0.3,0.5,-0.4);
-                    glScalef(scaleParameterEars,scaleParameterEars,1);
-                    glutSolidCube(0.05);
+                    glTranslatef(0,0.2,0.5);
+                    glutSolidCube(0.1);
                 glPopMatrix();
+
+                // ears
+                glColor3f(0,1,0);
+                glPushMatrix();
+                    
+                    glPushMatrix();
+                        glTranslatef(-0.3,0.5,-0.35);
+                        glScalef(scaleParameterEars,scaleParameterEars,1);
+                        glScalef(2,2,1);
+                        glutSolidCube(0.1);
+                    glPopMatrix();
+                    glPushMatrix();
+                        glTranslatef(0.3,0.5,-0.35);
+                        glScalef(scaleParameterEars,scaleParameterEars,1);
+                        glScalef(2,2,1);
+                        glutSolidCube(0.1);
+                    glPopMatrix();
+                    glPushMatrix();
+                        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBlack1);
+                        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBlack1);
+                        glTranslatef(-0.3,0.5,-0.4);
+                        glScalef(scaleParameterEars,scaleParameterEars,1);
+                        glutSolidCube(0.05);
+                    glPopMatrix();
+                    glPushMatrix();
+                        glTranslatef(0.3,0.5,-0.4);
+                        glScalef(scaleParameterEars,scaleParameterEars,1);
+                        glutSolidCube(0.05);
+                    glPopMatrix();
+                glPopMatrix();
+                gluDeleteQuadric(pigBody);
             glPopMatrix();
-            gluDeleteQuadric(pigBody);
+
         glPopMatrix();
+        // glPopMatrix();
         
         // legs
+        // glPushMatrix();
+        // glTranslatef(0,0.8,-2);
         glPushMatrix();
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialPink2);
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialPink2);
@@ -232,6 +252,7 @@ void drawBarrelPig(){
                 glutSolidCube(0.15);
             glPopMatrix();
         glPopMatrix();
+        // glPopMatrix();
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBlack1);
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBlack1);
 
@@ -243,6 +264,7 @@ void drawSkateboard(){
     glPushMatrix();
     
         glTranslatef(0,0,-2);
+
         // board
         glPushMatrix();
             
@@ -277,6 +299,7 @@ void drawSkateboard(){
         
 
         glPopMatrix();
+
         // wheels
         glPushMatrix();
             
@@ -356,6 +379,7 @@ void drawSkateboard(){
             glPopMatrix();
             gluDeleteQuadric(wheels);
         glPopMatrix();
+        
         // pins and pinholders
         glPushMatrix();
             GLUquadric* pins=gluNewQuadric();

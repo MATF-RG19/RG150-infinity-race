@@ -5,7 +5,7 @@
 #include "initialize.h"
 
 
-// parameter which determines speed of wheels turning around
+// parameter used for wheels turning around animation
 extern float wheelAngle;
 
 
@@ -20,14 +20,21 @@ extern int playerLaneGoingTo;
 // playerLane is float because of possibility of changing speed of changing lanes but after finishing changing value of playerLane it has to be whole number
 extern float playerLane;
 
+// position of player (always same)
 extern float playerPos;
 
-
+// parameters for scaling player after hitting object/mushroom
 extern float scaleParameterBody;
 extern float scaleParameterBodyEnd;
 extern float scaleParameterEars;
 extern float scaleParameterEyes;
 extern float scaleParameterEyesPupils;
+
+
+
+// parameter for player's animation
+extern float pomeriY;
+
 
 
 
