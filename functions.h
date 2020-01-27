@@ -14,9 +14,14 @@
 void onDisplay(void);
 void onReshape(int width, int height);
 void onKeyboard(unsigned char key, int x, int y);
+
 void onTimer(int value);
 void endGameAnimation(int value);
+
 void resetEverything();
+
+void displayScore();
+void displayText();
 
 
 

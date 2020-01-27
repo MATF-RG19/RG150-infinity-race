@@ -13,7 +13,7 @@ float thetaCam=0;
 // float phiCam=1.5;
 // float thetaCam=-2.5;
 float p=45;
-
+// -0.5 0
 void onDisplay(void){
 
     // clears the window
@@ -21,16 +21,14 @@ void onDisplay(void){
 
     // next transformations affects the modelview matrix
     glMatrixMode(GL_MODELVIEW);
+    
     // clear the matrix
     glLoadIdentity();
+
     // positions and aims the camera towards where we want (viewing transformation)
     // gluLookAt(3, 6, 8, 3, 1, -2, 0, 1, 0);
-    // gluLookAt(xCam+rCam*sin(phiCam), yCam, zCam+rCam*cos(phiCam)-10, 3, 1, -2, 0, 1, 0);
-    // gluLookAt(xCam+rCam*sin(phiCam)+rCam*sin(thetaCam), yCam+rCam*cos(thetaCam), zCam+rCam*cos(phiCam)-10, 3, 1, -2, 0, 1, 0);
     gluLookAt(xCam+rCam*sin(phiCam)+rCam*sin(thetaCam), yCam+rCam*cos(thetaCam)-10, zCam+rCam*cos(phiCam)-10, 3, 1, -2, 0, 1, 0);
-    // printf("%f,%f\n",phiCam,thetaCam);
-
-    printf("BOOL %d animation %d\n",endGame,animationActive);
+    
 
     // position of light source ((x, y, z, w) position of light)
     GLfloat lightPosition[] = { 1, 1, 1, 0 };
@@ -41,17 +39,9 @@ void onDisplay(void){
     // diffuse RGBA intensity of light
     GLfloat lightDiffuse[] = { 0, 0, 0, 1 };
 
-    // specular RGBA intensity of light
-    // GLfloat lightSpecular[] = { 1, 1, 1, 1 };
-
-    // ambient color of material
-    GLfloat ambientMaterial[] = { 0, 0, 1, 1 };
-
-    // diffuse color of material
-    GLfloat diffuseMaterial[] = { 0, 1, 0, 1 };
-
-    // specular color of material
-    // GLfloat specularMaterial[] = { 1, 1, 1, 1 };
+    // int result;
+    // glGetIntegerv(GL_MAX_MODELVIEW_STACK_DEPTH, &result);
+    // printf("%d\n",result);
 
     // specular exponent
     GLfloat shininess = 10;
@@ -62,49 +52,41 @@ void onDisplay(void){
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
-    // glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
+
 
     // // set material parameters
-    // glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMaterial);
-    // glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMaterial);
-    // glMaterialfv(GL_FRONT, GL_SPECULAR, specularMaterial);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
-    // create objects
+    glShadeModel(GL_SMOOTH);
+    
     glPushMatrix();
-    glColor3f(0, 1, 0);
-    glTranslatef(playerLane, 0, 0);
-    // glTranslatef(-3,0,0);
-    drawBarrelPig();
-    drawSkateboard();
-    // glutSolidSphere(0.4, 100, 100);
+    // create player
+    glPushMatrix();
+    
+        glTranslatef(playerLane, 0, 0);
+    
+        glPushMatrix();
+    // glTranslatef(0,sin(pomeriY)/10,0);
+            drawBarrelPig();
+            drawSkateboard();
+        glPopMatrix();
+
     glPopMatrix();
 
 
-    // if(scaleParameterBody>1.2 || scaleParameterEars>1.5 || scaleParameterEyes>1.5){
-        
-    //     glutTimerFunc(TIME,endGameAnimation,TIMER_ID);
-    // }
-
-    // create path/borders
-    glLineWidth(100);
-    glBegin(GL_LINES);
-    glVertex3f(-1, -0.5, 100);
-    glVertex3f(-1, -0.5, -100);
-    glEnd();
-
-    glBegin(GL_LINES);
-    glVertex3f(7, -0.5, 100);
-    glVertex3f(7, -0.5, -100);
-    glEnd();
-
-    
+    draw_track();
     drawObjects();
-    
+
+    glPopMatrix();
+
+    // glPushMatrix();
+    // displayScore();
+    displayScore();
+    // glPopMatrix();
+    displayText();
 
 
-
-    glShadeModel(GL_SMOOTH);
+    // glShadeModel(GL_SMOOTH);
 
 
 
@@ -130,17 +112,37 @@ void onTimer(int value){
     if (value != TIMER_ID){
         return;
     }
-    glPushMatrix();
-    glTranslatef(1,4,-10);
-    glutSolidCube(5);
-    glPopMatrix();
+
+    // updating color
+    if(colorChange<6){
+        colorChange=colorChange+colorChangeSpeedUpdate;
+    }else{
+        colorChange=1;
+    }
+
+    // updating player animation
+    if(pomeriY<360){   
+        pomeriY=pomeriY+0.2;
+    }else{
+        pomeriY=0;
+    }
+
+    // updating wheel animation
     wheelAngle=wheelAngle+1;
 
+    // updating score
+    score=score+0.1;
+
+    // updating speed of objects
+    if(animationSpeedParameter<2){
+        animationSpeedParameter=animationSpeedParameter+0.01;
+    }
+
     // moving objects as time goes by
-    for (int i = 0; i < 100; i++){
+    for (int i = 0; i < numberOfObjects; i++){
         if (allObjects[i].objPos < 3){
 
-            allObjects[i].objPos =allObjects[i].objPos+animationSpeedParameter * .5;
+            allObjects[i].objPos =allObjects[i].objPos+animationSpeedParameter * 0.5;
         } else{
             // return objects behind all others so they all loop
             allObjects[i].objPos = -2000.0;
@@ -155,6 +157,7 @@ void onTimer(int value){
     }
 }
 
+// animation when game is over
 void endGameAnimation(int value){
     if (value != TIMER_ID){
         return;
@@ -175,8 +178,10 @@ void endGameAnimation(int value){
     
 }
 
+// function that resets everything to starting values
 void resetEverything(){
-    // animationActive=0;
+
+    animationSpeedParameter=1;
 
     phiCam=0;
     thetaCam=0;
@@ -193,15 +198,92 @@ void resetEverything(){
 
     wheelAngle=0;
 
+    colorChange=1;
+    colorChangeSpeedUpdate=0.1;
 
-    // phiCam=0;
-    // thetaCam=0;
-    // glutPostRedisplay();
+    score=0;
+    strcpy(text,"Press U to start game or ESC to quit");
+    strcpy(textCam,"Press C to change camera");
+
     endGame=false;
 
     initObjects();
-    // glutPostRedisplay();
+
 }
+
+void displayScore(){
+
+    int currentWidth = glutGet(GLUT_WINDOW_WIDTH);
+    int currentHeight = glutGet(GLUT_WINDOW_HEIGHT);
+
+    glDisable(GL_LIGHTING);
+    glColor3f( 0, 0, 0 );
+	
+    glMatrixMode( GL_PROJECTION );
+	glPushMatrix();
+		glLoadIdentity();
+		gluOrtho2D( 0, currentWidth, 0, currentHeight );
+		glMatrixMode( GL_MODELVIEW );
+		
+		glPushMatrix();
+			glLoadIdentity();
+            char scoreText[20];
+            int w = sprintf(scoreText, "SCORE: %.1f",score);
+			glRasterPos2i(20, currentHeight-50);
+			int len = (int)strlen(scoreText);
+			for (int i = 0; i<len; i++) {
+				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, scoreText[i]);
+			}
+		glPopMatrix();
+
+	glMatrixMode( GL_PROJECTION );
+	glPopMatrix();
+
+	glEnable(GL_LIGHTING);
+	glMatrixMode( GL_MODELVIEW );
+}
+void displayText(){
+
+    int len1 = (int)strlen(text);
+    int len2 = (int)strlen(textCam);
+    int current_width = glutGet(GLUT_WINDOW_WIDTH);
+    int current_height = glutGet(GLUT_WINDOW_HEIGHT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+        glLoadIdentity();
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+
+            glLoadIdentity();
+            glDisable(GL_LIGHTING);
+            glOrtho(0, current_width, 0, current_height, -1, 1);
+        
+            glColor3f(0, 0, 0);
+            glRasterPos2f(current_width/2 - 2.5*len1, current_height*.95);
+
+            for (int i = 0; i < len1; i++)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, text[i]);
+
+            glRasterPos2f(current_width-180,current_height-50);
+
+            for (int j = 0; j < len2; j++)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, textCam[j]);
+
+        glPopMatrix();
+
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+
+    // glMatrixMode(GL_PROJECTION);
+    // glPopMatrix();
+    // glMatrixMode(GL_MODELVIEW);
+    glutPostRedisplay();
+}
+
+
+
 
 
 void onKeyboard(unsigned char key, int x, int y){
@@ -239,9 +321,13 @@ void onKeyboard(unsigned char key, int x, int y){
         case 'u':
             if(!animationActive && !endGame){
                 animationActive=1;
+                strcpy(text,"");
+                strcpy(textCam,"");
                 glutTimerFunc(TIME, onTimer, TIMER_ID);
             // pause the game
             }else if(animationActive && !endGame){
+                strcpy(text,"Press R to restart or U to start or ESC to quit");
+                strcpy(textCam,"Press C to change camera");
                 animationActive=0;
             }
                 // glutTimerFunc(TIME, onTimer, TIMER_ID);
@@ -260,6 +346,15 @@ void onKeyboard(unsigned char key, int x, int y){
                 
                 // glutTimerFunc(TIME, onTimer, TIMER_ID);
             }
+            break;
+        // change camera view
+        case 'c':
+            if(phiCam==0 && thetaCam==0){
+                phiCam=-0.5;
+            }else{
+                phiCam=0;
+            }
+            glutPostRedisplay();
             break;
 
         case 'a':
