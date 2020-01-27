@@ -5,7 +5,7 @@ float colorChange=1;
 float colorChangeSpeedUpdate=0.1;
 
 
-void draw_track(){
+void drawTrack(){
 
     // create path/borders
     glLineWidth(100);

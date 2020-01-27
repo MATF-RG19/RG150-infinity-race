@@ -2,8 +2,6 @@
 #define BACKGROUND_H
 
 #include "initialize.h"
-// #include "player.h"
-// #include "objects.h"
 
 
 // alias of texture we use
@@ -20,11 +18,10 @@ extern float colorChangeSpeedUpdate;
 
 
 // Function used to draw game track
-void draw_track(void);
+void drawTrack(void);
 
 
-// Function used for displaying score counter in upper right corner
-void display_score();
+
 
 
 
