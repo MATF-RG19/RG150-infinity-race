@@ -52,7 +52,7 @@ void drawObjects(){
     // glMaterialfv(GL_FRONT, GL_SPECULAR, materialBlack1);
     // create objects
     int objectLane;
-    for (int i = 0; i < numberOfObjects; i++){
+    for (int i = 0; i < 100; i++){
         
         if (allObjects[i].objPos >-70){
 
@@ -100,10 +100,10 @@ void drawObjects(){
                             colorChangeSpeedUpdate=colorChangeSpeedUpdate+0.1;
                         }
                         // if player hits 2 red shrooms or 2 purple shrooms or 2 green shrooms game is over
-                        // if(scaleParameterBody>1.25 || scaleParameterEars>1.6 || scaleParameterEyes>2){
-                        //     strcpy(text,"GAME OVER | Press R to restart game or ESC to quit");
-                        //     glutTimerFunc(TIME,endGameAnimation,TIMER_ID);
-                        // }
+                        if(scaleParameterBody>1.25 || scaleParameterEars>1.6 || scaleParameterEyes>2){
+                            strcpy(text,"GAME OVER | Press R to restart game or ESC to quit");
+                            glutTimerFunc(TIME,endGameAnimation,TIMER_ID);
+                        }
                         
                     }
 
