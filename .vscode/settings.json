@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "playerandobjects.h": "c",
+        "array": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "random": "c",
+        "img.h": "c",
+        "*.tcc": "c",
+        "algorithm": "c",
+        "fstream": "c",
+        "istream": "c",
+        "ostream": "c",
+        "initialize.h": "c",
+        "objects.h": "c"
+    }
+}
