@@ -21,7 +21,7 @@ void onDisplay(void){
 
     // next transformations affects the modelview matrix
     glMatrixMode(GL_MODELVIEW);
-    
+
     // clear the matrix
     glLoadIdentity();
 
@@ -74,7 +74,7 @@ void onDisplay(void){
     glPopMatrix();
 
 
-    draw_track();
+    drawTrack();
     drawObjects();
 
     glPopMatrix();
@@ -211,6 +211,7 @@ void resetEverything(){
 
 }
 
+// function for displaying score in left right corner
 void displayScore(){
 
     int currentWidth = glutGet(GLUT_WINDOW_WIDTH);
@@ -242,6 +243,8 @@ void displayScore(){
 	glEnable(GL_LIGHTING);
 	glMatrixMode( GL_MODELVIEW );
 }
+
+// function for displaying text
 void displayText(){
 
     int len1 = (int)strlen(text);
