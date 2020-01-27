@@ -1,10 +1,10 @@
 #include "objects.h"
 
-#define PI 3.14
-Object allObjects[100];
+
+Object allObjects[numberOfObjects];
 
 
-// create new object
+// create new object (row of objects)
 Object newObject(){
 
     Object object;
@@ -52,7 +52,7 @@ void drawObjects(){
     // glMaterialfv(GL_FRONT, GL_SPECULAR, materialBlack1);
     // create objects
     int objectLane;
-    for (int i = 0; i < 100; i++){
+    for (int i = 0; i < numberOfObjects; i++){
         
         if (allObjects[i].objPos >-70){
 
@@ -63,11 +63,11 @@ void drawObjects(){
                     // drawing/putting object in his lane  
                     objectLane = 3 * j;
                     
-                    // Drawing obstacles
+                    // drawing objects
                     glPushMatrix();
 
                     glTranslatef(objectLane, 0, allObjects[i].objPos);
-                    // glutSolidCube(0.5);
+                    
                     
                     if(allObjects[i].objType==0){
                         drawMushroom1();
@@ -78,24 +78,33 @@ void drawObjects(){
                     }
 
                     glPopMatrix();
-                    // printf("PLAYERPOS %f OBJECTPOS %f  PLAYERLANE %f OBJECTLANE %d\n\n",playerPos,allObjects[i].objPos,playerLane,objectLane);
-                    // printf("BODY %f EYES %f EARS %f\n",scaleParameterBody,scaleParameterEyes,scaleParameterEars);
+                    
                     if(collisionDetection(playerPos,playerLane,allObjects[i].objPos,objectLane)){
+                        // remove object if player hits it
                         allObjects[i].obj[j]=0;
+
                         // if player eats/hits first object (mushroom) player's body will get larger
                         if(allObjects[i].objType==0){
-                            scaleParameterBody=scaleParameterBody+0.3;
-                        }else if(allObjects[i].objType==1){
-                            scaleParameterEars=scaleParameterEars+0.3;
-                        }else if(allObjects[i].objType==2){
-                            scaleParameterEyes=scaleParameterEyes+0.5;
-                        }
+                            scaleParameterBody=scaleParameterBody+0.2;
+                            // if player hits any shroom color change speeds up
+                            colorChangeSpeedUpdate=colorChangeSpeedUpdate+0.1;
 
-                        if(scaleParameterBody>1.2 || scaleParameterEars>1.5 || scaleParameterEyes>1.5){
-        
-                            glutTimerFunc(TIME,endGameAnimation,TIMER_ID);
+                        // if player eats/hits second object (mushroom) player's ears will get larger
+                        }else if(allObjects[i].objType==1){
+                            scaleParameterEars=scaleParameterEars+0.5;
+                            colorChangeSpeedUpdate=colorChangeSpeedUpdate+0.1;
+
+                        // if player eats/hits third object (mushroom) player's eyes will get larger
+                        }else if(allObjects[i].objType==2){
+                            scaleParameterEyes=scaleParameterEyes+0.8;
+                            colorChangeSpeedUpdate=colorChangeSpeedUpdate+0.1;
                         }
-                        // printf("DADADADADA\nDADADADADA\nDADADADADA\nDADADADADA\n");
+                        // if player hits 2 red shrooms or 2 purple shrooms or 2 green shrooms game is over
+                        // if(scaleParameterBody>1.25 || scaleParameterEars>1.6 || scaleParameterEyes>2){
+                        //     strcpy(text,"GAME OVER | Press R to restart game or ESC to quit");
+                        //     glutTimerFunc(TIME,endGameAnimation,TIMER_ID);
+                        // }
+                        
                     }
 
 
@@ -113,33 +122,22 @@ void drawMushroom1(){
             glPushMatrix();
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialRed1);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialRed1);
-                // glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialWhite);
-                // glLightfv(GL_LIGHT0, GL_SPECULAR, materialWhite);
                 
-                // glColor3f(0,0,0);
-                // glTranslatef(0,-0.15,-1);
-                // glScalef(1,3,1);
-                // // glutSolidCube(0.1);
-    
-                // glTranslatef(0,-0.05,-0.5);
-                // glRotatef(90,0,1,0);
-                // glTranslatef(-0.5,0,-0.4);
                 glTranslatef(0,1,0);
-                // glRotatef(90,1,0,0);
+                
                 
                 double clip_plane[] = {0, 2, 0, 0};
 
                 glClipPlane(GL_CLIP_PLANE0, clip_plane);
+                // clipping half sphere
                 glEnable(GL_CLIP_PLANE0);
-                // glTranslatef(0,3,0);
-                glRotatef(90,1,0,0);
-                // glRotatef(animation_parameter * 60, 1, 0, 0);
-                // glutSolidSphere(1.5, 20, 20);
-                glutSolidSphere(1,100,100);
+                
+                    glRotatef(90,1,0,0);
+                    
+                    glutSolidSphere(1,100,100);
 
                 glDisable(GL_CLIP_PLANE0);
 
-                // glutSolidSphere(1,100,100);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialWhite);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialWhite);
 
@@ -148,80 +146,7 @@ void drawMushroom1(){
 
             glPopMatrix();
             gluDeleteQuadric(mushroom);
-glPopMatrix();
-
-                // float x;
-                // float y;
-                // float z;
-                // float r=1;
-                // int k1=0;
-                // int k2=0;
-                // glBegin(GL_TRIANGLES);
-                // for(k1=-PI/2;k1<PI/2;k1+=0.1){
-                //     // for(k2=-PI;k2<PI;k2+=0.1){
-                        
-                //         x=r*sin(k1)*cos(k2);
-                //         y=r*sin(k1)*sin(k2);
-                //         z=r*cos(k1);
-                //         glVertex3f(x,y,z);
-
-                //     // }
-                // }
-                // glEnd();
-                
-
-//             // number of latitudes (parallels)
-//             float numberOfLatitudes=10;
-//             // number of longitudes (meridians)
-//             float numberOfLongitudes=10;
-            
-//             float radius=1;
-//             float x, y, z, xy;                              // vertex position
-// float nx, ny, nz, lengthInv = 1.0f / radius;    // vertex normal
-// float s, t;                                     // vertex texCoord
-
-// float sectorStep = 2 * PI / numberOfLatitudes;
-// float stackStep = PI / numberOfLongitudes;
-// float sectorAngle, stackAngle;
-// glBegin(GL_TRIANGLE_STRIP);
-// for(int i = 0; i <= numberOfLongitudes; ++i)
-// {
-//     stackAngle = PI / 2 - i * stackStep;        // starting from pi/2 to -pi/2
-//     xy = radius * cosf(stackAngle);             // r * cos(u)
-//     z = radius * sinf(stackAngle);              // r * sin(u)
-
-//     // add (numberOfLatitudes+1) vertices per stack
-//     // the first and last vertices have same position and normal, but different tex coords
-//     for(int j = 0; j <= numberOfLatitudes; ++j)
-//     {
-//         sectorAngle = j * sectorStep;           // starting from 0 to 2pi
-
-//         // vertex position (x, y, z)
-//         x = xy * cosf(sectorAngle);             // r * cos(u) * cos(v)
-//         y = xy * sinf(sectorAngle);             // r * cos(u) * sin(v)
-//         glVertex3f(x,y,z);
-//         // vertices.push_back(x);
-//         // vertices.push_back(y);
-//         // vertices.push_back(z);
-
-//         // normalized vertex normal (nx, ny, nz)
-//         nx = x * lengthInv;
-//         ny = y * lengthInv;
-//         nz = z * lengthInv;
-//         glNormal3f(nx,ny,nz);
-//         // normals.push_back(nx);
-//         // normals.push_back(ny);
-//         // normals.push_back(nz);
-
-//         // vertex tex coord (s, t) range between [0, 1]
-//         // s = (float)j / numberOfLatitudes;
-//         // t = (float)i / numberOfLongitudes;
-//         // texCoords.push_back(s);
-//         // texCoords.push_back(t);
-//     }
-// }
-// glEnd();
-
+    glPopMatrix();
 
                 
           
@@ -236,20 +161,8 @@ void drawMushroom2(){
             glPushMatrix();
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialPurple1);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialPurple1);
-                // glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialPurple2);
-                // glLightfv(GL_LIGHT0, GL_SPECULAR, materialPurple2);
-
                 
-                // glColor3f(0,0,0);
-                // glTranslatef(0,-0.15,-1);
-                // glScalef(1,3,1);
-                // // glutSolidCube(0.1);
-    
-                // glTranslatef(0,-0.05,-0.5);
-                // glRotatef(90,0,1,0);
-                // glTranslatef(-0.5,0,-0.4);
                 glTranslatef(0,1,0);
-                // glRotatef(90,1,0,0);
                 
                 glPushMatrix();
                     glScalef(0.5,1,0.5);
@@ -257,15 +170,14 @@ void drawMushroom2(){
 
                     glClipPlane(GL_CLIP_PLANE0, clip_plane);
                     glEnable(GL_CLIP_PLANE0);
-                    // glTranslatef(0,3,0);
+                    
                     glRotatef(90,1,0,0);
-                    // glRotatef(animation_parameter * 60, 1, 0, 0);
-                    // glutSolidSphere(1.5, 20, 20);
+                    
                     glutSolidSphere(1,100,100);
 
                     glDisable(GL_CLIP_PLANE0);
                 glPopMatrix();
-                // glutSolidSphere(1,100,100);
+                
                 
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialGray1);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialGray1);
@@ -275,7 +187,7 @@ void drawMushroom2(){
 
             glPopMatrix();
             gluDeleteQuadric(mushroom);
-glPopMatrix();
+    glPopMatrix();
                 
           
 }
@@ -289,18 +201,9 @@ void drawMushroom3(){
             glPushMatrix();
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialGreen1);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialGreen1);
-                // glMaterialfv(GL_FRONT, GL_SPECULAR, materialBrown2);
-                // glLightfv(GL_LIGHT0, GL_SPECULAR, materialBrown2);
-                // glColor3f(0,0,0);
-                // glTranslatef(0,-0.15,-1);
-                // glScalef(1,3,1);
-                // // glutSolidCube(0.1);
-    
-                // glTranslatef(0,-0.05,-0.5);
-                // glRotatef(90,0,1,0);
-                // glTranslatef(-0.5,0,-0.4);
+                
                 glTranslatef(0,0,0);
-                // glRotatef(90,1,0,0);
+                
                 
                 glPushMatrix();
                     glScalef(1,0.4,1);
@@ -308,15 +211,14 @@ void drawMushroom3(){
 
                     glClipPlane(GL_CLIP_PLANE0, clip_plane);
                     glEnable(GL_CLIP_PLANE0);
-                    // glTranslatef(0,3,0);
+                    
                     glRotatef(90,1,0,0);
-                    // glRotatef(animation_parameter * 60, 1, 0, 0);
-                    // glutSolidSphere(1.5, 20, 20);
+                    
                     glutSolidSphere(1,100,100);
 
                     glDisable(GL_CLIP_PLANE0);
                 glPopMatrix();
-                // glutSolidSphere(1,100,100);
+                
 
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialBrown1);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialBrown1);
@@ -326,7 +228,7 @@ void drawMushroom3(){
 
             glPopMatrix();
             gluDeleteQuadric(mushroom);
-glPopMatrix();
+    glPopMatrix();
                 
           
 }

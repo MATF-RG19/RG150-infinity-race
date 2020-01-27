@@ -3,6 +3,7 @@
 
 #include "initialize.h"
 
+#define numberOfObjects 100
 
 
 // struct that represents object in game
@@ -25,7 +26,7 @@ typedef struct object{
 
 
 
-extern Object allObjects[100];
+extern Object allObjects[numberOfObjects];
 
 
 void initObjects();
