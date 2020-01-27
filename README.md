@@ -30,7 +30,7 @@ The goal is to get highest score.
 
 ## Demo
 
-
+![demo](https://github.com/bambalic/rg-seminarski/blob/master/demo.gif)
 
 
 
